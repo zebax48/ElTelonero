@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { ClipLoader } from 'react-spinners';
+import { BASE_URL } from '@/api/serverConfig';
 import Modal from '@/components/AdminPage/Modal';
 import styles from '@/styles/FormularioRegistro.module.css';
 
@@ -32,7 +33,7 @@ export default function FormularioRegistro() {
             if (!id) {
                 throw new Error('Falta el id del evento');
             }
-            const res = await fetch(`http://localhost:5000/api/eventos/${id}/registrar`, {
+            const res = await fetch(`${BASE_URL}/eventos/${id}/registrar`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
