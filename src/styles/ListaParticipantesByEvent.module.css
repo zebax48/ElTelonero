@@ -1,0 +1,96 @@
+.container {
+  padding: 1rem 0.2rem;
+  background-color: var(--color-fondo);
+  color: var(--color-texto-principal);
+  min-height: 100vh;
+  text-align: center;
+  width: 100%;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.titulo {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  color: var(--color-acento);
+  text-shadow: 2px 2px 8px var(--color-sombra);
+  animation: pulse 3s infinite;
+}
+
+.eventoInfo {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 1.2rem;
+  color: var(--color-texto-secundario);
+}
+
+.eventoInfo p {
+  margin: 0;
+}
+
+.cargando,
+.sinDatos {
+  font-size: 1.2rem;
+  color: var(--color-texto-secundario);
+  margin-top: 2rem;
+}
+
+.tablaResponsive {
+  overflow-x: auto;
+  width: 100%;
+  max-width: 1000px;
+  margin: 20px auto;
+  border-radius: 12px;
+  box-shadow: 0 0 15px var(--color-sombra);
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla th,
+.tabla td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-sombra);
+  text-align: left;
+  font-size: 1rem;
+}
+
+.tabla th {
+  background-color: var(--color-acento);
+  color: var(--color-fondo);
+  font-weight: bold;
+  text-shadow: 1px 1px 6px var(--color-sombra);
+}
+
+.tabla td a {
+  color: var(--color-acento);
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .titulo {
+    font-size: 2rem;
+  }
+
+  .tabla th,
+  .tabla td {
+    font-size: 0.9rem;
+    padding: 0.75rem;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}

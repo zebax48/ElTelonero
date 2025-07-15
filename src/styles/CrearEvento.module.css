@@ -1,0 +1,102 @@
+.container {
+  padding: 3rem 1rem;
+  background-color: var(--color-fondo);
+  color: var(--color-texto-principal);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.titulo {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  color: var(--color-acento);
+  text-shadow: 1px 1px 6px var(--color-sombra);
+  animation: pulse 3s infinite;
+  text-align: center;
+}
+
+.formulario {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.02);
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 15px var(--color-sombra);
+  animation: slideUp 1s ease-in-out;
+}
+
+.formulario input,
+.formulario textarea,
+.formulario select {
+  padding: 1rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  background-color: var(--color-caja);
+  color: var(--color-texto-principal);
+  box-shadow: 0 0 10px var(--color-sombra);
+  transition: all 0.3s ease;
+}
+
+.formulario input:focus,
+.formulario textarea:focus,
+.formulario select:focus {
+  outline: 2px solid var(--color-acento);
+  box-shadow: 0 0 15px var(--color-acento);
+}
+
+.boton {
+  background-color: var(--color-acento);
+  color: var(--color-fondo);
+  font-weight: bold;
+  padding: 1rem 2.5rem;
+  border-radius: 60px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  margin: 0 auto;
+  box-shadow: 0 5px 15px var(--color-sombra);
+}
+
+.boton:hover {
+  transform: scale(1.1);
+  box-shadow: 0 10px 25px var(--color-sombra);
+}
+
+@media (max-width: 768px) {
+  .titulo {
+    font-size: 2rem;
+  }
+
+  .formulario {
+    padding: 1.5rem;
+  }
+
+  .boton {
+    font-size: 1rem;
+    padding: 0.75rem 2rem;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}

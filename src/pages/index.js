@@ -1,12 +1,12 @@
 "use client";
 
-import Header from "@/components/Header";
-import Banner from "@/components/Banner";
-import Inscripcion from "@/components/Inscripcion";
-import Acerca from "@/components/Acerca";
-import Galeria from "@/components/Galeria";
-import Video from "@/components/Video";
-import Footer from "@/components/Footer";
+import Header from "@/components/HomePage/Header";
+import Banner from "@/components/HomePage/Banner";
+import Inscripcion from "@/components/HomePage/Inscripcion";
+import Acerca from "@/components/HomePage/Acerca";
+import Galeria from "@/components/HomePage/Galeria";
+import Video from "@/components/HomePage/Video";
+import Footer from "@/components/HomePage/Footer";
 import { useEffect } from "react";
 
 export default function Home() {

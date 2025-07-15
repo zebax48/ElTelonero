@@ -1,8 +1,27 @@
+:root {
+  --color-fondo: #000803;
+  --color-fondo-header: rgba(0, 0, 0, 0.7);
+  --color-texto-principal: #FFFFFF;
+  --color-acento: white;
+  --color-sombra: rgba(60, 255, 0, 0.3);
+  --color-texto-secundario: #E0E9E4;
+  --color-caja: #111;
+  --color-error: #FF4C4C;
+  --color-exito: #4CFF4C;
+
+  --color-modal-bg: rgba(0, 0, 0, 0.8);
+  --color-modal-box: #111;
+  --color-modal-border: #3cff00;
+  --color-modal-text: #fff;
+  --color-modal-shadow: rgba(60, 255, 0, 0.4);
+}
+
+
 body,
 html {
   margin: 0;
   padding: 0;
-  background-color: #000803;
+  background-color: var(--color-fondo);
   color: white;
   font-family: "Lato", arial, sans-serif;
 }
@@ -11,6 +30,12 @@ html {
   width: 100%;
   overflow-x: hidden;
 }
+.loaderContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
 
 .header {
   height: 5vh;
@@ -18,7 +43,7 @@ html {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 1.5rem;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: var(--color-fondo-header);
   backdrop-filter: blur(6px);
   position: sticky;
   top: 0;
