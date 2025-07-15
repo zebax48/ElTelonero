@@ -8,7 +8,7 @@ import styles from '@/styles/FormularioRegistro.module.css';
 export default function FormularioRegistro() {
     const router = useRouter();
     const { id } = router.query;
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
 
     const [formData, setFormData] = useState({
@@ -29,6 +29,7 @@ export default function FormularioRegistro() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         try {
             if (!id) {
                 throw new Error('Falta el id del evento');
@@ -43,7 +44,6 @@ export default function FormularioRegistro() {
 
             if (res.ok) {
                 setMensaje('✅ Registro exitoso. ¡Gracias por participar!');
-                setShowModal(true);
                 setFormData({
                     correo: '',
                     nombreCompleto: '',
@@ -54,11 +54,13 @@ export default function FormularioRegistro() {
                 });
             } else {
                 setMensaje(`❌ Error: ${data.error}`);
-                setShowModal(true);
             }
         } catch (error) {
             console.log(error);
             return;
+        } finally {
+            setLoading(false);
+            setShowModal(true);
         }
     };
 
@@ -70,63 +72,70 @@ export default function FormularioRegistro() {
 
     return (
         <section className={styles.registroContainer}>
-            <h4 className={styles.registroTitulo}>Formulario de Registro</h4>
+            {loading ? (
+                <div className='loaderContainer' style={{ height: '100vh' }}><ClipLoader color="#fff" loading={loading} size={50} /></div>
+            ) :
+                <>
+                    <h4 className={styles.registroTitulo}>Formulario de Registro</h4>
 
-            <form className={styles.registroForm} onSubmit={handleSubmit}>
-                <input
-                    type="email"
-                    name="correo"
-                    placeholder="Correo electrónico"
-                    value={formData.correo}
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="text"
-                    name="nombreCompleto"
-                    placeholder="Nombre completo"
-                    value={formData.nombreCompleto}
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="text"
-                    name="documento"
-                    placeholder="Número de documento"
-                    value={formData.documento}
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="tel"
-                    name="telefono"
-                    placeholder="Teléfono de contacto"
-                    value={formData.telefono}
-                    onChange={handleChange}
-                    required
-                />
-                <textarea
-                    name="descripcion"
-                    placeholder="Comparte una breve descripción sobre ti y tu música."
-                    value={formData.descripcion}
-                    onChange={handleChange}
-                />
-                <input
-                    type="text"
-                    name="enlaceTalento"
-                    placeholder="Pega un enlace, como muestra de tu música o video en línea."
-                    value={formData.enlaceTalento}
-                    onChange={handleChange}
-                />
+                    <form className={styles.registroForm} onSubmit={handleSubmit}>
+                        <input
+                            type="email"
+                            name="correo"
+                            placeholder="Correo electrónico"
+                            value={formData.correo}
+                            onChange={handleChange}
+                            required
+                        />
+                        <input
+                            type="text"
+                            name="nombreCompleto"
+                            placeholder="Nombre completo"
+                            value={formData.nombreCompleto}
+                            onChange={handleChange}
+                            required
+                        />
+                        <input
+                            type="text"
+                            name="documento"
+                            placeholder="Número de documento"
+                            value={formData.documento}
+                            onChange={handleChange}
+                            required
+                        />
+                        <input
+                            type="tel"
+                            name="telefono"
+                            placeholder="Teléfono de contacto"
+                            value={formData.telefono}
+                            onChange={handleChange}
+                            required
+                        />
+                        <textarea
+                            name="descripcion"
+                            placeholder="Comparte una breve descripción sobre ti y tu música."
+                            value={formData.descripcion}
+                            onChange={handleChange}
+                        />
+                        <input
+                            type="text"
+                            name="enlaceTalento"
+                            placeholder="Pega un enlace, como muestra de tu música o video en línea."
+                            value={formData.enlaceTalento}
+                            onChange={handleChange}
+                        />
 
-                <div className={styles.warning}>
-                    ⚠️ Asegúrate de que el enlace sea público y accesible sin restricciones. Solo se permite un enlace directo.
-                </div>
+                        <div className={styles.warning}>
+                            ⚠️ Asegúrate de que el enlace sea público y accesible sin restricciones. Solo se permite un enlace directo.
+                        </div>
 
-                <button type="submit" className={styles.inscribirseButton}>
-                    Inscribirme
-                </button>
-            </form>
+                        <button type="submit" className={styles.inscribirseButton}>
+                            Inscribirme
+                        </button>
+                    </form>
+                </>
+            }
+
 
             {showModal && (
                 <Modal onClose={handleCloseModal}>
