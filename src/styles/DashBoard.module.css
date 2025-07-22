@@ -1,0 +1,35 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: var(--color-fondo-secundario);
+}
+
+.buttonContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 2rem;
+}
+.button {
+  background-color: #fff;
+  color: #303030;
+  padding: 1rem 2rem;
+  border-radius: 60px;
+  transition: transform 0.5s;
+  font-size: 22px;
+  font-weight: bold;
+  font-family: "Fredoka One", arial, sans-serif;
+}
+
+.button:hover {
+  transform: scale(1.2);
+  box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+}
