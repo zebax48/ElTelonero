@@ -9,6 +9,10 @@
   --color-error: #FF4C4C;
   --color-exito: #4CFF4C;
 
+  --color-ganador: #f5c518;
+  --color-segundo: #b6b6b6;
+  --color-tercero: #cd7f32;
+
   --color-modal-bg: rgba(0, 0, 0, 0.8);
   --color-modal-box: #111;
   --color-modal-border: #3cff00;
@@ -35,6 +39,7 @@ html {
   justify-content: center;
   align-items: center;
   text-align: center;
+  height: 100vh;
 }
 
 .header {
@@ -140,6 +145,7 @@ a:hover {
   background-color: rgba(60, 255, 0, 0.2);
   color: #E0E9E4;
   transition: background-color 0.3s ease;
+  cursor: pointer;
 }
 
 a:active {
@@ -349,6 +355,17 @@ iframe {
 .copyright {
   margin-top: 1rem;
   font-size: 0.875rem;
+}
+
+.image {
+  margin-top: 1rem;
+  border-radius: 60px;
+  box-shadow: 0 4px 6px var(--color-modal-border);
+  transition: transform 0.3s;
+}
+
+.image:hover {
+  transform: scale(1.05);
 }
 
 @keyframes fadeIn {

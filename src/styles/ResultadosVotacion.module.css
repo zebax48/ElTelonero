@@ -1,0 +1,124 @@
+.resultadosContainer {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  background-color: var(--fondo);
+  color: var(--text);
+}
+
+.titulo {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: var(--primary);
+}
+
+.cardGanador {
+  border: 4px solid #ffffff;
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 0 100px rgba(255, 204, 0, 0.4);
+  animation: popWinner 2s ease-in-out;
+  background: linear-gradient(135deg, #f5e78a, #f5d440, #fff6b1, #ecc21b);
+  background-size: 150% 180%;
+  transition: transform 0.3s, box-shadow 0.3s;
+  color: #000000;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.nombreGanador {
+  font-size: 2.5rem;
+  margin: 0.5rem 0;
+  color: var(--accent);
+}
+
+.votos {
+  font-size: 1.4rem;
+  color: var(--success);
+}
+
+.medalla {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.segundoTerceroContainer {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.cardSegundo,
+.cardTercero {
+  flex: 1 1 250px;
+  border-radius: 15px;
+  padding: 1.5rem;
+  border: 2px solid #ccc;
+  box-shadow: 0 0 10px rgba(0,0,0,0.15);
+  transition: transform 0.3s;
+  color: #000000;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.cardGanadorWrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.cardGanador {
+  position: relative;
+  z-index: 1;
+}
+
+.cardGanador:hover,
+.cardSegundo:hover,
+.cardTercero:hover {
+  transform: scale(1.03);
+}
+
+.cardSegundo {
+  border-color: rgb(255, 255, 255);
+  background: linear-gradient(135deg, #ebebeb, #b6b6b6, #ebebeb, #b6b6b6);
+  background-size: 150% 180%;
+}
+
+.cardTercero {
+  border-color: #ffffff;
+  background: linear-gradient(135deg, #ffb66e, #cd7f32, #ffb66e, #cd7f32);
+  background-size: 150% 180%;
+}
+
+.restantes {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #f4f4f4;
+  border-radius: 10px;
+  border-left: 5px solid var(--secondary);
+  text-align: left;
+}
+
+.restantes h2 {
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+.confettiContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+@keyframes popWinner {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

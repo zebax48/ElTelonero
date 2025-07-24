@@ -54,8 +54,8 @@ export default function VotacionPage() {
     setShowModal(true);
   };
 
-  if (!votacion) return <ClipLoader color="#fff" loading={true} size={50} />;
-  if (!votacion.activa) return <p style={{ color: 'white', textAlign: 'center' }}>⛔ Esta votación ha finalizado.</p>;
+  if (!votacion) return <div className='loaderContainer'><ClipLoader color="#fff" loading={true} size={100} /></div>
+  if (!votacion.activa) return <p className='loaderContainer'style={{ color: 'white', textAlign: 'center', fontSize: '1.5rem', fontWeight: 'bold' }}>⛔ Esta votación ha finalizado.</p>;
 
   const handleCloseModal = () => {
     setShowModal(false);

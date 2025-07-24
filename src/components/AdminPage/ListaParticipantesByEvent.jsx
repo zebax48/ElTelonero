@@ -24,8 +24,8 @@ export default function ListaParticipantes() {
         }));
     };
 
-    if (!eventId) {
-        return <div className='loaderContainer' style={{ height: '100vh' }}><ClipLoader color="#fff" loading={loading} size={50} /></div>;
+    if (!eventId || !participantes) {
+        return <div className='loaderContainer'><ClipLoader color="#fff" loading={loading} size={100} /></div>;
     }
 
     async function fetchEvent() {
@@ -63,7 +63,7 @@ export default function ListaParticipantes() {
                 <p><strong>Número maximo de participantes:</strong> {event?.capacidad}</p>
             </div>
             {loading ? (
-                <p className={styles.cargando}>Cargando...</p>
+                <p className={styles.cargando}><ClipLoader color="#fff" loading={loading} size={100} /></p>
             ) : participantes.length === 0 ? (
                 <p className={styles.sinDatos}>No hay participantes registrados aún.</p>
             ) : (

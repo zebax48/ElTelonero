@@ -1,86 +1,108 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { getVotacionPorId } from '@/api/votaciones';
+import { useEffect, useState } from "react";
+import { getVotacion } from "@/api/votacionApi";
+import { ACTIVE_VOTATION_ID } from "@/api/serverConfig";
+import ConfettiExplosion from "react-confetti-explosion";
+import { ClipLoader } from "react-spinners";
+import styles from "@/styles/ResultadosVotacion.module.css";
 
-const medallas = ['🥇', '🥈', '🥉'];
+const ResultadosScreen = () => {
 
-const ResultadosVotacion = ({ votacionId }) => {
   const [participantes, setParticipantes] = useState([]);
-  const [evento, setEvento] = useState(null);
+  const [ganador, setGanador] = useState(null);
+  const [segundo, setSegundo] = useState(null);
+  const [tercero, setTercero] = useState(null);
+  const [eventoNombre, setEventoNombre] = useState(null);
+  const [showConfetti, setShowConfetti] = useState(true);
+  const [isClient, setIsClient] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchResultados = async () => {
-      try {
-        const res = await getVotacionPorId(votacionId);
-        const ordenados = [...res.participantes].sort((a, b) => b.votos - a.votos);
-        setParticipantes(ordenados);
-        setEvento(res.evento);
-      } catch (error) {
-        console.error('Error al cargar resultados:', error);
-      }
-    };
+    setIsClient(true);
+    fetchData();
 
-    fetchResultados();
-  }, [votacionId]);
+    const interval = setInterval(() => {
+      setShowConfetti(false);
+      setTimeout(() => setShowConfetti(true), 200);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [ACTIVE_VOTATION_ID]);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const votacion = await getVotacion(ACTIVE_VOTATION_ID);
+      if (votacion && votacion._id && Array.isArray(votacion.participantes)) {
+        setEventoNombre(votacion.evento?.nombre || '');
+        const ordenados = [...votacion.participantes].sort((a, b) => (b.votos || 0) - (a.votos || 0));
+        setParticipantes(ordenados);
+        setGanador(ordenados[0]);
+        setSegundo(ordenados[1]);
+        setTercero(ordenados[2]);
+      }
+    } catch (error) {
+      console.error('Error al obtener los resultados de la votación:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return <div className='loaderContainer'><ClipLoader color="#fff" loading={true} size={100} /></div>;
+  }
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold text-center mb-6 text-primary">
-        Resultados de la Votación {evento?.nombre && `– ${evento.nombre}`}
+    <div className={styles.resultadosContainer}>
+      <h1 className={styles.titulo}>
+        🏆 Resultados de la votación {eventoNombre && `– ${eventoNombre}`}
       </h1>
 
-      <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        {participantes.map((p, index) => (
-          <motion.div
-            key={p._id}
-            className={`rounded-2xl p-6 shadow-2xl text-center border-4 ${
-              index === 0
-                ? 'bg-yellow-100 border-yellow-400'
-                : index === 1
-                ? 'bg-gray-100 border-gray-400'
-                : index === 2
-                ? 'bg-orange-100 border-orange-400'
-                : 'bg-white border-neutral-300'
-            }`}
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.2, duration: 0.6, type: 'spring' }}
-          >
-            <div className="text-6xl mb-2">{medallas[index] || '🎤'}</div>
-            <h2 className="text-xl font-bold text-secondary">{p.nombreCompleto}</h2>
-            <p className="text-neutral-600 mt-1">{p.descripcion}</p>
-            <motion.p
-              className="mt-4 text-lg font-bold text-success"
-              animate={{ scale: [1, 1.1, 1] }}
-              transition={{ repeat: Infinity, duration: 2, delay: 0.5 }}
-            >
-              Votos: {p.votos}
-            </motion.p>
-          </motion.div>
-        ))}
+      {isClient &&showConfetti && (
+        <div className={styles.confettiContainer}>
+          <ConfettiExplosion />
+          <ConfettiExplosion />
+          </div>)}
+
+      {ganador && (
+        <div className={styles.cardGanador}>
+          <div className={styles.medalla}>🥇</div>
+          <h2 className={styles.nombreGanador}>{ganador.nombreCompleto}</h2>
+          <p className={styles.votos}><strong>Votos: </strong>{ganador.votos || 0}</p>
+        </div>
+      )}
+
+      <div className={styles.segundoTerceroContainer}>
+        {segundo && (
+          <div className={styles.cardSegundo}>
+            <div className={styles.medalla}>🥈</div>
+            <h4>{segundo.nombreCompleto}</h4>
+            <p className={styles.votos}><strong>Votos: </strong>{segundo.votos || 0}</p>
+          </div>
+        )}
+
+        {tercero && (
+          <div className={styles.cardTercero}>
+            <div className={styles.medalla}>🥉</div>
+            <h4>{tercero.nombreCompleto}</h4>
+            <p className={styles.votos}><strong>Votos: </strong>{tercero.votos || 0}</p>
+          </div>
+        )}
       </div>
 
-      <motion.div
-        className="text-center mt-10"
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ delay: 1.5 }}
-      >
-        {participantes[0] && (
-          <motion.h2
-            className="text-3xl font-bold animate-pulse text-accent"
-            initial={{ y: -10 }}
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-          >
-            🏆 ¡El ganador oficial es {participantes[0].nombreCompleto}!
-          </motion.h2>
-        )}
-      </motion.div>
+      {participantes.length > 3 && (
+        <div className={styles.restantes}>
+          <h2>🏅 Participantes restantes</h2>
+          {participantes.slice(3).map((p) => (
+            <p key={p._id}>
+              {p.nombreCompleto} - {p.votos || 0} votos
+            </p>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
 
-export default ResultadosVotacion;
+export default ResultadosScreen;
