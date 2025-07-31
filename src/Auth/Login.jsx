@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { useAuth } from './AuthContext';
-import Header from '../Layout/HeaderI';
-import Footer from '../Layout/FooterI';
-import Spinner from '../Spinner';
-import '../../styles/Login.css';
-import '../../styles/App.css';
+import { ClipLoader } from "react-spinners";
+import Image from 'next/image';
+import styles from '@/styles/Login.module.css'
 
 const Login = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { login, auth, resetAuth } = useAuth();
   const [credentials, setCredentials] = useState({ username: '', password: '' });
   const [loading, setLoading] = useState(false);
@@ -19,14 +17,10 @@ const Login = () => {
   }, []);
 
   useEffect(() => {
-    if (auth.token && auth.role) {
-      if (auth.role === 'Evaluador') {
-        navigate('/grupos');
-      } else {
-        navigate('/dashboard');
+    if (auth.token) {
+        router.push('/admin/dashboard');
       }
-    }
-  }, [auth, navigate]);
+  }, [auth, router]);
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -44,42 +38,39 @@ const Login = () => {
   };
 
   return (
-    <div className="page-container">
-      <Header />
-      <div className="login-container">
-        <div className="login-box">
-          <img src="/assets/logoLogin.jpg" alt="Tecnológico de Antioquia" className="logo" />
+    <div className={styles.pageContainer}>
+      <div className={styles.loginContainer}>
+        <div className={styles.loginBox}>
+          <Image src="/gallery5.jpg" alt="Tecnológico de Antioquia" height={150} width={100} className={styles.logo} />
           <form onSubmit={handleSubmit}>
-            <div className="input-group">
+            <div className={styles.inputGroup}>
               <input
                 type="text"
                 name="username"
                 value={credentials.username}
                 onChange={handleChange}
                 placeholder="Nombre de usuario"
-                className="input-field"
+                className={styles.inputField}
               />
-              <span className="icon">&#128100;</span> {/* Ícono de usuario */}
+              <span className={styles.icon}>&#128100;</span> {/* Ícono de usuario */}
             </div>
-            <div className="input-group">
+            <div className={styles.inputGroup}>
               <input
                 type="password"
                 name="password"
                 value={credentials.password}
                 onChange={handleChange}
                 placeholder="Contraseña"
-                className="input-field"
+                className={styles.inputField}
               />
-              <span className="icon">&#128274;</span> {/* Ícono de candado */}
+              <span className={styles.icon}>&#128274;</span> {/* Ícono de candado */}
             </div>
-            <button type="submit" className="login-button" disabled={loading}>
-              {loading ? <Spinner size={16} color="#fff" /> : 'Ingresar'}
+            <button type="submit" className={styles.loginButton} disabled={loading}>
+              {loading ? <ClipLoader size={16} color="#fff" /> : 'Ingresar'}
             </button>
           </form>
-          <a onClick={() => navigate('/recover')} className="recover-link">Recuperar contraseña</a>
         </div>
-      </div>
-      <Footer />
+      </div>  
     </div>
   );
 };

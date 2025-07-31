@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function Acerca() {
     return (
         <div className="acerca-container">
@@ -5,7 +7,7 @@ export default function Acerca() {
             <section id="acerca" className="acerca">
                 {[1, 2].map(i => (
                     <div key={i} className="columna">
-                        <img src={`/img${i}.png`} alt="img" className="imagen" />
+                        <Image src={`/img${i}.png`} alt="img" height={150} width={100} className="imagen" />
                         {i === 1 && (
                             <>
                                 <h4 className="subtitulo">PRESENTACIÓN</h4>

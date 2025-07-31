@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
 import { BASE_URL } from '@/api/serverConfig';
 
 const AuthContext = createContext();
@@ -8,16 +7,23 @@ export const useAuth = () => {
   return useContext(AuthContext);
 };
 
+
 export const AuthProvider = ({ children }) => {
-  const [auth, setAuth] = useState(() => {
-    const savedAuth = localStorage.getItem('auth');
-    return savedAuth ? JSON.parse(savedAuth) : {
-      token: null,
-      username: null,
-      nombreCompleto: null,
-      correo: null,
-    };
+  const [auth, setAuth] = useState({
+    token: null,
+    username: null,
+    nombreCompleto: null,
+    correo: null,
   });
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedAuth = localStorage.getItem("auth");
+      if (savedAuth) {
+        setAuth(JSON.parse(savedAuth));
+      }
+    }
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('auth', JSON.stringify(auth));
@@ -35,14 +41,24 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
 
     try {
-      const response = await axios.post(`${BASE_URL}/api/users/login`, credentials);
+      const response = await fetch(`${BASE_URL}/users/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials)
+      });
+      const data = await response.json();
       const userData = {
-        id: response.data.id,
-        token: response.data.token,
-        username: response.data.username,
-        nombreCompleto: response.data.nombreCompleto,
-        correo: response.data.correo,
+        id: data.id,
+        token: data.token,
+        username: data.username,
+        nombreCompleto: data.nombreCompleto,
+        correo: data.correo,
       };
+      if (!data.token) {
+        return window.alert('Usuario o contraseña incorrecta');
+      }
       setAuth(userData);
       localStorage.setItem('auth', JSON.stringify(userData));
     } catch (error) {
@@ -54,7 +70,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       const { username, token } = auth;
-      await axios.get(`${BASE_URL}/api/users/logout/${username}`, {
+      await fetch(`${BASE_URL}/users/logout/${username}`, {
         headers: {
           Authorization: auth.token,
         },
@@ -72,7 +88,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-    const register = async (credentials) => {
+   /* const register = async (credentials) => {
     try {
       const response = await axios.post(`${BASE_URL}/api/users/register`, credentials);
       const userData = {
@@ -83,24 +99,23 @@ export const AuthProvider = ({ children }) => {
         apellidos: response.data.apellidos,
         celular: response.data.celular,
         correo: response.data.correo,
-        role: response.data.role
       };
     } catch (error) {
       console.error('Error al registrar usuario:', error);
       window.alert('Ocurrió un error al registrar el usuario');
     }
-  };
+  };*/
 
   const value = {
     auth,
     login,
     logout,
     resetAuth,
-    register
+    setAuth
   };
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={ value }>
       {children}
     </AuthContext.Provider>
   );

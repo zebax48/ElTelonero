@@ -35,8 +35,13 @@ export default function Home() {
       <Banner />
       <section className="scroll-animate"><Inscripcion /></section>
       <section className="scroll-left"><Acerca /></section>
-      <section className="scroll-right"><Galeria /></section>
-      <section className="scroll-animate"><Video url="https://www.youtube.com/embed/v7pyxHOHunk" /></section>
+      <div className="galeria-container">
+        <section className="scroll-right"><Galeria /></section>
+      </div>
+      <div className="video-container">
+        <Video url="https://www.youtube.com/embed/1t6Bk_Rivuw" title={"GANADOR 2024"} />
+        <Video url="https://www.youtube.com/embed/v7pyxHOHunk" title={"PROMO 2025"} />
+      </div>
       <Footer />
     </main>
   );

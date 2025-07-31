@@ -1,8 +1,8 @@
-export default function Video({ url }) {
+export default function Video({ url, title }) {
   return (
     <section className="video" id="videos">
       <div className="video-wrapper">
-        <h4>PROMO 2025</h4>
+        <h4>{title}</h4>
         <iframe
           src={url}
           title="YouTube video player"
