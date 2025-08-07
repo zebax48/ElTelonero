@@ -1,9 +1,11 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 export default function Header() {
     const [open, setOpen] = useState(false);
+    const router = useRouter();
     return (
         <header className="header">
             <h1 className="title">El Telonero Soy Yo</h1>
@@ -19,6 +21,7 @@ export default function Header() {
                         <li><a href="#acerca" onClick={() => setOpen(false)}>Acerca</a></li>
                         <li><a href="#galeria" onClick={() => setOpen(false)}>Galería</a></li>
                         <li><a href="#videos" onClick={() => setOpen(false)}>Videos</a></li>
+                        <li><a onClick={() => router.push('/admin/dashboard')}>Admin</a></li>
                     </ul>
                 )}
             </nav>

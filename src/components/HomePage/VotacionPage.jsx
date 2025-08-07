@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { getVotacion } from '@/api/votacionApi';
 import { enviarVoto } from '@/api/participanteApi';
 import { ClipLoader } from 'react-spinners';
-import Modal from '@/components/AdminPage/Modal';
+import Modal from '@/components/HomePage/Modal';
 import styles from '@/styles/FormularioRegistro.module.css';
 
 export default function VotacionPage() {
@@ -13,6 +13,9 @@ export default function VotacionPage() {
   const [mensaje, setMensaje] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [yaVoto, setYaVoto] = useState(false);
+  const [haIniciado, setHaIniciado] = useState(false);
+  const [tiempoParaIniciar, setTiempoParaIniciar] = useState('');
+  const [tiempoParaFinalizar, setTiempoParaFinalizar] = useState('');
 
   useEffect(() => {
     if (id) {
@@ -22,14 +25,127 @@ export default function VotacionPage() {
     }
   }, [id]);
 
+  useEffect(() => {
+    if (!votacion) return;
+
+    const interval = setInterval(() => {
+      const ahora = new Date();
+      const fechaInicio = new Date(votacion.fechaInicio);
+      const fechaFin = new Date(fechaInicio.getTime() + votacion.duracionMinutos * 60 * 1000);
+
+      // Determinar si ya inició
+      const yaInicio = ahora >= fechaInicio;
+
+      if (yaInicio !== haIniciado) {
+        setHaIniciado(yaInicio);
+      }
+
+      // Calcular tiempo para iniciar (si no ha iniciado)
+      if (!yaInicio) {
+        const diffMsInicio = fechaInicio - ahora;
+        if (diffMsInicio <= 0) {
+          setTiempoParaIniciar('00:00');
+          clearInterval(interval);
+          fetchVotacion(id);
+          return;
+        }
+
+        const horas = Math.floor(diffMsInicio / (1000 * 60 * 60));
+        const minutos = Math.floor((diffMsInicio % (1000 * 60 * 60)) / (1000 * 60));
+        const segundos = Math.floor((diffMsInicio % (1000 * 60)) / 1000);
+
+        let formatoInicio;
+        if (horas > 0) {
+          formatoInicio = `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
+        } else {
+          formatoInicio = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
+        }
+        setTiempoParaIniciar(formatoInicio);
+      }
+
+      // Calcular tiempo para finalizar (si ya inició)
+      if (yaInicio) {
+        const diffMsFin = fechaFin - ahora;
+        if (diffMsFin <= 0) {
+          setTiempoParaFinalizar('00:00');
+          clearInterval(interval);
+          // Redirigir al inicio cuando termine la votación
+          router.push('/');
+          return;
+        }
+
+        const horas = Math.floor(diffMsFin / (1000 * 60 * 60));
+        const minutos = Math.floor((diffMsFin % (1000 * 60 * 60)) / (1000 * 60));
+        const segundos = Math.floor((diffMsFin % (1000 * 60)) / 1000);
+
+        let formatoFin;
+        if (horas > 0) {
+          formatoFin = `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
+        } else {
+          formatoFin = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
+        }
+        setTiempoParaFinalizar(formatoFin);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [votacion, haIniciado, id, router]);
+
   const fetchVotacion = async (id) => {
     try {
       const res = await getVotacion(id);
+
       if (res.error) {
         setMensaje(`❌ ${res.error}`);
-      } else {
-        setVotacion(res);
+        return;
       }
+
+      const ahora = new Date();
+      const fechaInicio = new Date(res.fechaInicio);
+      const fechaFin = new Date(fechaInicio.getTime() + res.duracionMinutos * 60 * 1000);
+      const yaInicio = ahora >= fechaInicio;
+
+      setHaIniciado(yaInicio);
+      setVotacion(res);
+
+      // Tiempo para iniciar
+      const diffMsInicio = fechaInicio - ahora;
+      if (diffMsInicio > 0) {
+        const horas = Math.floor(diffMsInicio / (1000 * 60 * 60));
+        const minutos = Math.floor((diffMsInicio % (1000 * 60 * 60)) / (1000 * 60));
+        const segundos = Math.floor((diffMsInicio % (1000 * 60)) / 1000);
+
+        let formatoInicio;
+        if (horas > 0) {
+          formatoInicio = `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
+        } else {
+          formatoInicio = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
+        }
+        setTiempoParaIniciar(formatoInicio);
+      } else {
+        setTiempoParaIniciar('00:00');
+      }
+
+      // Tiempo para finalizar
+      if (yaInicio) {
+        const diffMsFin = fechaFin - ahora;
+        if (diffMsFin > 0) {
+          const horas = Math.floor(diffMsFin / (1000 * 60 * 60));
+          const minutos = Math.floor((diffMsFin % (1000 * 60 * 60)) / (1000 * 60));
+          const segundos = Math.floor((diffMsFin % (1000 * 60)) / 1000);
+
+          let formatoFin;
+          if (horas > 0) {
+            formatoFin = `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
+          } else {
+            formatoFin = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
+          }
+          setTiempoParaFinalizar(formatoFin);
+        } else {
+          setTiempoParaFinalizar('00:00');
+        }
+      }
+
     } catch (error) {
       console.error('Error fetching votacion:', error);
       setMensaje('❌ Error al cargar la votación');
@@ -43,10 +159,10 @@ export default function VotacionPage() {
       if (res.error) {
         setMensaje(`❌ ${data.error}`);
         return;
-      }   
-        localStorage.setItem(`voto-${id}`, participanteId);
-        setMensaje('✅ ¡Gracias por tu voto!');
-        setYaVoto(true);
+      }
+      localStorage.setItem(`voto-${id}`, participanteId);
+      setMensaje('✅ ¡Gracias por tu voto!');
+      setYaVoto(true);
     } catch (error) {
       console.error(error);
       setMensaje('❌ Error al procesar el voto');
@@ -54,20 +170,36 @@ export default function VotacionPage() {
     setShowModal(true);
   };
 
-  if (!votacion) return <div className='loaderContainer'><ClipLoader color="#fff" loading={true} size={100} /></div>
-  if (!votacion.activa) return <p className='loaderContainer'style={{ color: 'white', textAlign: 'center', fontSize: '1.5rem', fontWeight: 'bold' }}>⛔ Esta votación ha finalizado.</p>;
-
   const handleCloseModal = () => {
     setShowModal(false);
     setMensaje(null);
     router.push(`/`);
   };
 
+  if (!votacion) return <div className='loaderContainer'><ClipLoader color="#fff" loading={true} size={100} /></div>
+
+  if (!votacion.activa) return (
+    <p className='loaderContainer' style={{ color: 'white', textAlign: 'center', fontSize: '1.5rem', fontWeight: 'bold' }}>
+      ⛔ Esta votación ha finalizado.
+    </p>
+  );
+
+  if (!haIniciado) {
+    return (
+      <div className='loaderContainer' style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', color: 'white', textAlign: 'center', fontSize: '1.5rem', fontWeight: 'bold' }}>
+        <p>
+          🕒 Esta votación comenzará en <strong>{tiempoParaIniciar || '00:00'}</strong>
+        </p>
+        <button className='inscribirse-button' onClick={() => router.push(`/`)}>Volver al inicio</button>
+      </div>
+    );
+  }
+
   return (
     <section className={styles.registroContainer}>
       <h4 className={styles.registroTitulo} style={{ minWidth: '100%' }}>El Telonero Soy Yo: {votacion.evento.nombre}</h4>
       <p style={{ color: 'var(--color-texto-secundario)', marginBottom: '1rem' }}>
-        Tiempo restante: <strong>{votacion.minutosRestantes}</strong> minutos
+        Tiempo restante: <strong>{tiempoParaFinalizar || '00:00'}</strong>
       </p>
       {yaVoto ? (
         <p style={{ color: 'var(--color-texto-secundario)' }}>✅ Ya has votado. ¡Gracias!</p>
@@ -79,8 +211,8 @@ export default function VotacionPage() {
               <p style={{ fontSize: '0.9rem', color: 'var(--color-texto-secundario)' }}>{p.descripcion}</p>
               <a href={
                 p.enlaceTalento.startsWith('http')
-                ? p.enlaceTalento
-                : `https://${p.enlaceTalento}`}
+                  ? p.enlaceTalento
+                  : `https://${p.enlaceTalento}`}
                 target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-acento)' }}>Ver talento</a>
               <button
                 className={styles.inscribirseButton}

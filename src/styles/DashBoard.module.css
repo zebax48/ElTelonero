@@ -1,22 +1,42 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: var(--color-fondo-secundario);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-fondo-secundario);
+  min-height: 81vh;
+  padding: 2rem;
+  z-index: 1;
+  overflow-x: hidden;
+}
+
+.backgroundWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
+.backgroundImage {
+  object-fit: cover;
+  opacity: 0.2;
+  pointer-events: none;
 }
 
 .buttonContainer {
-    display: flex;
-    flex-direction: row;
-    gap: 2rem;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    margin-top: 2rem;
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 2rem;
+  z-index: 2;
+  position: relative;
 }
+
 .button {
   background-color: #fff;
   color: #303030;
@@ -32,4 +52,17 @@
   transform: scale(1.2);
   box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
   cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .buttonContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .button {
+    width: 100%;
+    max-width: 300px;
+  }
+  
 }

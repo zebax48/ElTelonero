@@ -1,8 +1,12 @@
 import { BASE_URL } from "./serverConfig";
 
-export const getEventos = async () => {
+export const getEventos = async (token) => {
     try {
-        const res = await fetch(`${BASE_URL}/eventos`);
+        const res = await fetch(`${BASE_URL}/eventos`, {
+            headers: {
+                Authorization: `${token}`,
+            }
+        });
         if (!res.ok) {
             throw new Error('Error fetching eventos');
         }
@@ -10,7 +14,7 @@ export const getEventos = async () => {
         return await res.json();
     } catch (error) {
         console.error('Error fetching eventos:', error);
-        return {error: 'Error fetching eventos'};
+        return { error: 'Error fetching eventos' };
     }
 };
 
@@ -24,7 +28,7 @@ export const getEvento = async (id) => {
         return await res.json();
     } catch (error) {
         console.error('Error fetching evento:', error);
-        return {error: 'Error fetching evento'};
+        return { error: 'Error fetching evento' };
     }
 };
 
@@ -42,6 +46,65 @@ export const createEvento = async (data) => {
         return await res.json();
     } catch (error) {
         console.error('Error creating evento:', error);
-        return {error: 'Error creating evento'};
+        return { error: 'Error creating evento' };
     }
 };
+
+export const getActiveVotacion = async (id) => {
+    try {
+        const res = await fetch(`${BASE_URL}/eventos/votacion-activa/${id}`);
+        if (!res.ok) {
+            throw new Error('Error fetching active votacion');
+        }
+
+        return await res.json();
+    } catch (error) {
+        console.error('Error fetching active votacion:', error);
+        return { error: 'Error fetching active votacion' };
+    }
+}
+
+export const setVotacionStatus = async (eventId, status, token) => {
+    try {
+        console.log('Setting votacion status:', { eventId, status });
+        console.log('Using token:', token);
+
+        const res = await fetch(`${BASE_URL}/eventos/setVotacionStatus`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `${token}` },
+            body: JSON.stringify({ eventId, status })
+        });
+        
+        console.log('Response:', res);
+        if (!res.ok) {
+            throw new Error('Error setting votacion status');
+        }
+        
+
+        return await res.json();
+    } catch (error) {
+        console.error('Error setting votacion status:', error);
+        return { error: 'Error setting votacion status' };
+    }
+}
+
+export const setResultVotacionStatus = async (eventId, status, token) => {
+    try {
+        const res = await fetch(`${BASE_URL}/eventos/setResultVotacionStatus`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `${token}` },
+            body: JSON.stringify({ eventId, status })
+        });
+        
+        console.log('Response:', res);
+        if (!res.ok) {
+            throw new Error('Error setting votacion status');
+        }
+        
+
+        return await res.json();
+    } catch (error) {
+        console.error('Error setting votacion status:', error);
+        return { error: 'Error setting votacion status' };
+    }
+}

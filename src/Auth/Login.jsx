@@ -41,7 +41,7 @@ const Login = () => {
     <div className={styles.pageContainer}>
       <div className={styles.loginContainer}>
         <div className={styles.loginBox}>
-          <Image src="/gallery5.jpg" alt="Tecnológico de Antioquia" height={150} width={100} className={styles.logo} />
+          <Image src="/gallery5.jpg" alt="Telonero" height={150} width={100} className={styles.logo} priority/>
           <form onSubmit={handleSubmit}>
             <div className={styles.inputGroup}>
               <input

@@ -43,11 +43,75 @@
 }
 
 .content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  font-size: 1.2rem;
-  font-weight: bold;
-  line-height: 1.5;
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1.6;
 }
+
+.modalImage {
+  width: 70px;
+  height: 70px;
+  margin-bottom: 1rem;
+}
+
+.modalTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ff4d4d;
+  margin-bottom: 0.5rem;
+}
+
+.modalText {
+  font-size: 1rem;
+  color: var(--color-modal-text);
+  margin-bottom: 1.5rem;
+}
+
+.modalActions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.confirmButton,
+.cancelButton {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.confirmButton {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+}
+
+.cancelButton {
+  background-color: transparent;
+  color: var(--color-modal-text);
+  border: 2px solid var(--color-modal-border);
+}
+
+.modalButtons {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+
 
 @keyframes fadeIn {
   from { opacity: 0; }

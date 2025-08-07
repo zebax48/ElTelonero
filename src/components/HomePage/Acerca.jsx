@@ -7,7 +7,7 @@ export default function Acerca() {
             <section id="acerca" className="acerca">
                 {[1, 2].map(i => (
                     <div key={i} className="columna">
-                        <Image src={`/img${i}.png`} alt="img" height={150} width={100} className="imagen" />
+                        <Image src={`/img${i}.png`} alt="img" height={150} width={100} className="imagenAcerca" priority/>
                         {i === 1 && (
                             <>
                                 <h4 className="subtitulo">PRESENTACIÓN</h4>

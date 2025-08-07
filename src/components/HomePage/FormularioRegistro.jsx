@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { ClipLoader } from 'react-spinners';
 import { BASE_URL } from '@/api/serverConfig';
-import Modal from '@/components/AdminPage/Modal';
+import { ACTIVE_EVENT_ID } from '@/api/serverConfig';
+import Modal from '@/components/HomePage/Modal';
 import styles from '@/styles/FormularioRegistro.module.css';
 
 export default function FormularioRegistro() {
     const router = useRouter();
-    const { id } = router.query;
     const [loading, setLoading] = useState(false);
-
+    const eventId = ACTIVE_EVENT_ID
 
     const [formData, setFormData] = useState({
         correo: '',
@@ -31,10 +31,10 @@ export default function FormularioRegistro() {
         e.preventDefault();
         setLoading(true);
         try {
-            if (!id) {
-                throw new Error('Falta el id del evento');
+            if (!eventId) {
+                throw new Error('Falta el eventId del evento');
             }
-            const res = await fetch(`${BASE_URL}/eventos/${id}/registrar`, {
+            const res = await fetch(`${BASE_URL}/eventos/${eventId}/registrar`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)

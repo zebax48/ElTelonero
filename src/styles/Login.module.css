@@ -7,6 +7,7 @@
 .loginContainer {
     flex: 1;
     display: flex;
+    padding: 2rem;;
     justify-content: center;
     align-items: center;
     background-color: var(--color-fondo);
@@ -24,6 +25,7 @@
 
 .logo {
     width: 60%;
+    height: auto;
     border-radius: 1rem;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
     transition: transform 0.5s;

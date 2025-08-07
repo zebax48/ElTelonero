@@ -133,6 +133,12 @@ html {
   list-style: none;
 }
 
+.dropdown li.logout {
+  border-top: 1px solid var(--color-sombra-fuerte);
+  margin-top: 8px;
+  padding-top: 15px;
+}
+
 a {
   text-decoration: none;
   color: white;
@@ -272,6 +278,15 @@ a:active {
   transition: transform 0.5s;
 }
 
+.imagenAcerca {
+  width: 100%;
+  height: auto;
+  border-radius: 1rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+  transition: transform 0.5s;
+}
+
+.imagenAcerca:hover,
 .imagen:hover {
   transform: scale(1.05);
   box-shadow: 0 10px 20px var(--color-sombra-fuerte);
@@ -313,6 +328,7 @@ h4 {
 
 .imagen-galeria {
   width: 100%;
+  height: auto;
   border-radius: 0.5rem;
   transition: transform 0.3s;
   box-shadow: 0 5px 15px var(--color-sombra-suave);

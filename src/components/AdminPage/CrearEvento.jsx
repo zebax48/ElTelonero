@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import Modal from '@/components/AdminPage/Modal';
+import Modal from '@/components/HomePage/Modal';
 import { BASE_URL } from '@/api/serverConfig';
 import AdminHeader from '@/components/AdminPage/AdminHeader';
+import withAuth from '@/utils/withAuth';
 import styles from '@/styles/CrearEvento.module.css';
 
-export default function CrearEvento() {
+function CrearEvento() {
   const [formData, setFormData] = useState({
     nombre: '',
     fecha: '',
@@ -110,3 +111,5 @@ export default function CrearEvento() {
 
   );
 }
+
+export default withAuth(CrearEvento);

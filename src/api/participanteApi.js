@@ -1,8 +1,14 @@
 import { BASE_URL } from "./serverConfig";
 
-export const getParticipantes = async (eventId) => {
+export const getParticipantes = async (eventId, token) => {
     try {
-        const res = await fetch(`${BASE_URL}/eventos/${eventId}/participantes`);
+        const res = await fetch(`${BASE_URL}/eventos/${eventId}/participantes`, 
+            {
+                headers: {
+                    Authorization: `${token}`,
+                }
+            }
+        );
         if (!res.ok) {
             throw new Error('Error fetching participantes');
         }

@@ -1,21 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import styles from '@/styles/ListaParticipantesByEvent.module.css';
 import { BASE_URL } from '@/api/serverConfig';
-import { useRouter } from 'next/router';
 import { ClipLoader } from 'react-spinners';
+import { getActiveEventId } from '@/api/serverConfig';
+import { useAuth } from '@/Auth/AuthContext';
+import withAuth from '@/utils/withAuth';
 
-export default function ListaParticipantes() {
-    const router = useRouter();
-    const { eventId } = router.query;
+function ListaParticipantes() {
     const [event, setEvent] = useState();
+    const [eventId, setEventId] = useState(null);
     const [participantes, setParticipantes] = useState([]);
     const [expandedRows, setExpandedRows] = useState({});
     const [loading, setLoading] = useState(true);
+    const { auth } = useAuth();
+
+    const getEventId = async () => {
+        const id = await getActiveEventId();
+        setEventId(id);
+    };
 
     useEffect(() => {
-        if (!eventId) return;
+        getEventId();
+        if(!eventId) {
+            return;
+        }
         fetchEvent();
-    }, [eventId]);
+    }, [auth, eventId]);
 
     const toggleExpand = (id) => {
         setExpandedRows((prev) => ({
@@ -29,11 +39,15 @@ export default function ListaParticipantes() {
     }
 
     async function fetchEvent() {
+        setLoading(true);
         try {
-            const res = await fetch(`${BASE_URL}/eventos/${eventId}`);
+            const res = await fetch(`${BASE_URL}/eventos/${eventId}`, {
+                headers: {
+                    Authorization: `${auth.token}`,
+                }
+            });
             const data = await res.json();
             setEvent(data);
-            console.log('Evento:', data);
         } catch (error) {
             console.error('Error al obtener el evento:', error);
         } finally {
@@ -42,11 +56,17 @@ export default function ListaParticipantes() {
     }
 
     async function fetchParticipantes() {
+        setLoading(true);
         try {
-            const res = await fetch(`${BASE_URL}/eventos/${eventId}/participantes`);
+            const res = await fetch(`${BASE_URL}/eventos/${eventId}/participantes`,
+                {
+                    headers: {
+                        Authorization: `${auth.token}`,
+                    }
+                }
+            );
             const data = await res.json();
             setParticipantes(data);
-            console.log('Participantes:', data);
         } catch (error) {
             console.error('Error al obtener los participantes:', error);
         } finally {
@@ -81,47 +101,60 @@ export default function ListaParticipantes() {
                             </tr>
                         </thead>
                         <tbody>
-                            {participantes.map((p, index) => (
-                                <tr key={p._id}>
-                                    <td>{index + 1}</td>
-                                    <td>{p.nombreCompleto}</td>
-                                    <td>{p.correo}</td>
-                                    <td>{p.documento}</td>
-                                    <td>{p.telefono}</td>
-                                    <td>
-                                        {p.descripcion.length > 100 ? (
-                                            <>
-                                                {expandedRows[p._id]
-                                                    ? p.descripcion
-                                                    : p.descripcion.slice(0, 100) + '...'}
-                                                <br />
-                                                <button
-                                                    onClick={() => toggleExpand(p._id)}
-                                                    style={{ color: 'blue', border: 'none', background: 'none', cursor: 'pointer', padding: 0 }}
-                                                >
-                                                    {expandedRows[p._id] ? 'Ver menos' : 'Ver más'}
-                                                </button>
-                                            </>
-                                        ) : (
-                                            p.descripcion
-                                        )}
-                                    </td>
-
-                                    <td>
-                                        <a
-                                            href={
-                                                p.enlaceTalento.startsWith('http')
-                                                    ? p.enlaceTalento
-                                                    : `https://${p.enlaceTalento}`
-                                            }
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >
-                                            Ver
-                                        </a>
+                            {Array.isArray(participantes) && participantes.length > 0 ? (
+                                participantes.map((p, index) => (
+                                    <tr key={p?._id}>
+                                        <td>{index + 1}</td>
+                                        <td>{p?.nombreCompleto}</td>
+                                        <td>{p?.correo}</td>
+                                        <td>{p?.documento}</td>
+                                        <td>{p?.telefono}</td>
+                                        <td>
+                                            {p?.descripcion?.length > 100 ? (
+                                                <>
+                                                    {expandedRows[p?._id]
+                                                        ? p?.descripcion
+                                                        : p?.descripcion.slice(0, 100) + '...'}
+                                                    <br />
+                                                    <button
+                                                        onClick={() => toggleExpand(p?._id)}
+                                                        style={{
+                                                            color: 'blue',
+                                                            border: 'none',
+                                                            background: 'none',
+                                                            cursor: 'pointer',
+                                                            padding: 0,
+                                                        }}
+                                                    >
+                                                        {expandedRows[p?._id] ? 'Ver menos' : 'Ver más'}
+                                                    </button>
+                                                </>
+                                            ) : (
+                                                p?.descripcion
+                                            )}
+                                        </td>
+                                        <td>
+                                            <a
+                                                href={
+                                                    p?.enlaceTalento?.startsWith('http')
+                                                        ? p?.enlaceTalento
+                                                        : `https://${p?.enlaceTalento}`
+                                                }
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
+                                                Ver
+                                            </a>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="7" style={{ textAlign: 'center' }}>
+                                        No hay participantes disponibles
                                     </td>
                                 </tr>
-                            ))}
+                            )}
                         </tbody>
                     </table>
                 </div>
@@ -129,3 +162,5 @@ export default function ListaParticipantes() {
         </section>
     );
 }
+
+export default withAuth(ListaParticipantes);

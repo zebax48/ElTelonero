@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getVotacion } from "@/api/votacionApi";
-import { ACTIVE_VOTATION_ID } from "@/api/serverConfig";
+import { getActiveVotationId } from "@/api/serverConfig";
 import ConfettiExplosion from "react-confetti-explosion";
 import { ClipLoader } from "react-spinners";
 import styles from "@/styles/ResultadosVotacion.module.css";
@@ -17,6 +17,15 @@ const ResultadosScreen = () => {
   const [showConfetti, setShowConfetti] = useState(true);
   const [isClient, setIsClient] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [ACTIVE_VOTATION_ID, setActiveVotationId] = useState(null);
+
+  useEffect(() => {
+    const fetchActiveVotationId = async () => {
+      const id = await getActiveVotationId();
+      setActiveVotationId(id);
+    };
+    fetchActiveVotationId();
+  }, []);
 
   useEffect(() => {
     setIsClient(true);
@@ -33,6 +42,9 @@ const ResultadosScreen = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
+      if (!ACTIVE_VOTATION_ID) {
+        return;
+      }
       const votacion = await getVotacion(ACTIVE_VOTATION_ID);
       if (votacion && votacion._id && Array.isArray(votacion.participantes)) {
         setEventoNombre(votacion.evento?.nombre || '');
@@ -69,7 +81,7 @@ const ResultadosScreen = () => {
         <div className={styles.cardGanador}>
           <div className={styles.medalla}>🥇</div>
           <h2 className={styles.nombreGanador}>{ganador.nombreCompleto}</h2>
-          <p className={styles.votos}><strong>Votos: </strong>{ganador.votos || 0}</p>
+          {/* <p className={styles.votos}><strong>Votos: </strong>{ganador.votos || 0}</p> */}
         </div>
       )}
 
@@ -78,7 +90,7 @@ const ResultadosScreen = () => {
           <div className={styles.cardSegundo}>
             <div className={styles.medalla}>🥈</div>
             <h4>{segundo.nombreCompleto}</h4>
-            <p className={styles.votos}><strong>Votos: </strong>{segundo.votos || 0}</p>
+            {/* <p className={styles.votos}><strong>Votos: </strong>{segundo.votos || 0}</p> */}
           </div>
         )}
 
@@ -86,7 +98,7 @@ const ResultadosScreen = () => {
           <div className={styles.cardTercero}>
             <div className={styles.medalla}>🥉</div>
             <h4>{tercero.nombreCompleto}</h4>
-            <p className={styles.votos}><strong>Votos: </strong>{tercero.votos || 0}</p>
+            {/* <p className={styles.votos}><strong>Votos: </strong>{tercero.votos || 0}</p> */}
           </div>
         )}
       </div>

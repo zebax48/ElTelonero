@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getVotacionActiva, enviarVoto } from '@/api/votacionApi';
-import Modal from '@/components/AdminPage/Modal';
+import Modal from '@/components/HomePage/Modal';
 import styles from '@/styles/FormularioRegistro.module.css';
 
 export default function VotacionActiva() {

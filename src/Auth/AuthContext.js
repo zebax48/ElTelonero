@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { BASE_URL } from '@/api/serverConfig';
+import { isTokenExpired } from '@/utils/auth';
+import { useRouter } from 'next/router';
+import { ClipLoader } from 'react-spinners';
 
 const AuthContext = createContext();
 
@@ -9,20 +12,30 @@ export const useAuth = () => {
 
 
 export const AuthProvider = ({ children }) => {
+  const router = useRouter();
   const [auth, setAuth] = useState({
     token: null,
     username: null,
     nombreCompleto: null,
     correo: null,
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedAuth = localStorage.getItem("auth");
-      if (savedAuth) {
-        setAuth(JSON.parse(savedAuth));
+    const savedAuth = localStorage.getItem('auth');
+
+    if (savedAuth) {
+      const parsed = JSON.parse(savedAuth);
+      const expired = isTokenExpired(parsed.token);
+
+      if (expired) {
+        localStorage.removeItem('auth');
+        setAuth({ token: null, username: null, nombreCompleto: null, correo: null });
+      } else {
+        setAuth(parsed);
       }
     }
+    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -116,7 +129,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={ value }>
-      {children}
+      {loading ? <div className='loaderContainer'><ClipLoader color="#fff" loading={loading} size={100} /></div> : children}
     </AuthContext.Provider>
   );
 };

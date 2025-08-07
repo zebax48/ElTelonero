@@ -1,48 +1,49 @@
 import React, { useState, useEffect } from 'react';
-import { getEventos } from '@/api/eventoApi';
 import { getParticipantes } from '@/api/participanteApi';
 import { createVotacion } from '@/api/votacionApi';
 import { ClipLoader } from 'react-spinners';
 import { useRouter } from 'next/router';
-import Modal from '@/components/AdminPage/Modal';
+import { useAuth } from '@/Auth/AuthContext';
+import { getActiveEventId } from '@/api/serverConfig';
+import withAuth from '@/utils/withAuth';
+import Modal from '@/components/HomePage/Modal';
 import styles from '@/styles/FormularioRegistro.module.css';
 
-export default function CrearVotacion() {
+function CrearVotacion() {
+    const { auth } = useAuth();
     const router = useRouter();
-    const [eventos, setEventos] = useState([]);
     const [participantes, setParticipantes] = useState([]);
-    const [eventoSeleccionado, setEventoSeleccionado] = useState('');
     const [participantesSeleccionados, setParticipantesSeleccionados] = useState([]);
     const [duracionMinutos, setDuracionMinutos] = useState(10);
     const [mensaje, setMensaje] = useState(null);
     const [showModal, setShowModal] = useState(false);
-
+    const [loading, setLoading] = useState(true);
+    const [ACTIVE_EVENT_ID, setActiveEventId] = useState(null);
     useEffect(() => {
-        fetchEventos();
+        const fetchActiveEventId = async () => {
+            const id = await getActiveEventId();
+            setActiveEventId(id);
+        };
+        fetchActiveEventId();
     }, []);
 
-    const fetchEventos = async () => {
-        try {
-            const res = await getEventos();
-            console.log('Eventos:', res);
-            setEventos(res);
-        } catch (error) {
-            console.error('Error fetching eventos:', error);
-        }
-    };
-
     useEffect(() => {
-        if (eventoSeleccionado) {
-            fetchParticipantes();
-        }
-    }, [eventoSeleccionado]);
+        fetchParticipantes();
+    }, [ACTIVE_EVENT_ID]);
+
 
     const fetchParticipantes = async () => {
         try {
-            const res = await getParticipantes(eventoSeleccionado);
+            setLoading(true);
+            if (!ACTIVE_EVENT_ID) {
+                return;
+            }
+            const res = await getParticipantes(ACTIVE_EVENT_ID, auth.token);
             setParticipantes(res);
         } catch (error) {
             console.error('Error fetching participantes:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -52,7 +53,7 @@ export default function CrearVotacion() {
         );
     };
 
-    if (!eventos) {
+    if (loading) {
         return <div className='loaderContainer' style={{ height: '100vh' }}><ClipLoader color="#fff" loading={true} size={50} /></div>;
     }
 
@@ -60,15 +61,14 @@ export default function CrearVotacion() {
         e.preventDefault();
         try {
             const obj = {
-                evento: eventoSeleccionado,
+                evento: ACTIVE_EVENT_ID,
                 participantes: participantesSeleccionados,
                 duracionMinutos: Number(duracionMinutos)
             };
-            const res = await createVotacion(obj);
+            const res = await createVotacion(obj, auth.token);
 
             if (res.ok) {
                 setMensaje('✅ Votación creada exitosamente');
-                setEventoSeleccionado('');
                 setParticipantesSeleccionados([]);
                 setDuracionMinutos(10);
             } else {
@@ -90,39 +90,30 @@ export default function CrearVotacion() {
         <section className={styles.registroContainer}>
             <h4 className={styles.registroTitulo}>Crear Nueva Votación</h4>
             <form className={styles.registroForm} onSubmit={handleSubmit}>
-                <select
-                    value={eventoSeleccionado}
-                    onChange={(e) => setEventoSeleccionado(e.target.value)}
-                    required
-                >
-                    <option value="">-- Selecciona un evento --</option>
-                    {eventos.map(e => (
-                        <option key={e._id} value={e._id}>{e.nombre}</option>
-                    ))}
-                </select>
-
                 {participantes.length > 0 && (
                     <div>
-                        <p>Selecciona los participantes para la votación:</p>
-                        {participantes.map(p => (
-                            <label key={p._id} style={{ display: 'block', marginBottom: '8px' }}>
-                                <input
-                                    type="checkbox"
-                                    checked={participantesSeleccionados.includes(p._id)}
-                                    onChange={() => toggleSeleccion(p._id)}
-                                />{' '}
-                                {p.nombreCompleto}
-                            </label>
-                        ))}
+                        <h4 style={{ minWidth: '100%', padding: 0}}>Selecciona los participantes para la votación:</h4>
+                        <div className={styles.participantes}>
+                            {participantes.map(p => (
+                                <label key={p._id} style={{ display: 'block', marginBottom: '8px' }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={participantesSeleccionados.includes(p._id)}
+                                        onChange={() => toggleSeleccion(p._id)}
+                                    />{' '}
+                                    {p.nombreCompleto}
+                                </label>
+                            ))}
+                        </div>
                     </div>
                 )}
-
+                <h4 style={{ minWidth: '100%', padding: 0 }}>Duración de la votación en minutos:</h4>
                 <input
                     type="number"
                     min="1"
                     value={duracionMinutos}
                     onChange={(e) => setDuracionMinutos(e.target.value)}
-                    placeholder="Duración en minutos"
+                    placeholder="Duración de la votación en minutos"
                     required
                 />
 
@@ -137,3 +128,5 @@ export default function CrearVotacion() {
         </section>
     );
 }
+
+export default withAuth(CrearVotacion);

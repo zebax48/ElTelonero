@@ -26,11 +26,11 @@ export const getVotacion = async (id) => {
     }
 };
 
-export const createVotacion = async (data) => {
+export const createVotacion = async (data, token) => {
     try {
         const res = await fetch(`${BASE_URL}/votaciones`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `${token}` },
             body: JSON.stringify(data)
         });
         if (!res.ok) {
