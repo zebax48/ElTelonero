@@ -1,5 +1,29 @@
 import { BASE_URL } from "./serverConfig";
 
+const votacionApi = {
+  async getAll(token) {
+    const res = await fetch(`${BASE_URL}/votaciones`, {
+      headers: token ? { Authorization: `${token}` } : undefined,
+    });
+    if (!res.ok) throw new Error('Error al obtener votaciones');
+    return await res.json();
+  },
+  async getById(id) {
+    const res = await fetch(`${BASE_URL}/votaciones/${id}`);
+    if (!res.ok) throw new Error('Error al obtener votación');
+    return await res.json();
+  },
+  async activarVotacion(id, token) {
+    const res = await fetch(`${BASE_URL}/votaciones/activar/${id}`, {
+      method: 'PUT',
+      headers: { Authorization: `${token}` },
+    });
+    if (!res.ok) throw new Error('Error al activar votación');
+    return await res.json();
+    }
+};
+
+export default votacionApi;
 export const getVotaciones = async () => {
     try {
         const res = await fetch(`${BASE_URL}/votaciones`);
@@ -49,7 +73,7 @@ export const getVotacionActiva = async (eventoId) => {
         throw new Error('Evento ID is required to fetch active votaciones');
     }
     try {
-        const res = await fetch(`${BASE_URL}/votaciones/${eventoId}`);
+        const res = await fetch(`${BASE_URL}/votaciones/activa/${eventoId}`);
         if (!res.ok) {
             throw new Error('Error fetching active votaciones');
         }
@@ -57,5 +81,19 @@ export const getVotacionActiva = async (eventoId) => {
     } catch (error) {
         console.error('Error fetching active votaciones:', error);
         return {error: 'Error fetching active votaciones'};
+    }
+};
+
+export const enviarVoto = async (votacionId, participanteId) => {
+    try {
+        const res = await fetch(`${BASE_URL}/votaciones/votar/${votacionId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ participanteId })
+        });
+        return res;
+    } catch (error) {
+        console.error('Error enviando voto:', error);
+        throw error;
     }
 };

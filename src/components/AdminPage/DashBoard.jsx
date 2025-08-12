@@ -8,6 +8,8 @@ import { ClipLoader } from "react-spinners";
 import { setVotacionStatus, setResultVotacionStatus } from "@/api/eventoApi";
 import withAuth from "@/utils/withAuth";
 import AdminHeader from "@/components/AdminPage/AdminHeader";
+import ResetVotosButton from "@/components/AdminPage/ResetVotosButton";
+// import ActivarVotacion from "@/components/AdminPage/ActivarVotacion"; // moved to its own page
 import styles from "@/styles/DashBoard.module.css";
 import modalStyles from "@/styles/Modal.module.css";
 
@@ -157,7 +159,7 @@ function DashBoard() {
                         priority
                     />
                 </div>
-                <h4 style={{ fontSize: '2.5rem', margin: '0 auto' }}>Dashboard</h4>
+                <h4 style={{ fontSize: '2.5rem', margin: '1em auto', minWidth: '100%', textAlign:'center'}}>Dashboard</h4>
                 <div className={styles.buttonContainer}>
                     <button className={styles.button} onClick={() => router.push('/formulario/evento')}>
                         Crear Evento
@@ -175,7 +177,19 @@ function DashBoard() {
                         Ver Participantes
                     </button>
                 </div>
-                <h4 style={{ fontSize: '2.5rem', margin: '1em auto', minWidth: '100%', textAlign:'center'}}>Control de Votación</h4>
+                <h4 style={{ fontSize: '2.5rem', margin: '1em auto', minWidth: '100%', textAlign:'center'}}>Votación</h4>
+                <div className={styles.buttonContainer}>
+                    <button className={styles.button} onClick={() => router.push('/votacion/page')}>
+                        Crear Votación
+                    </button>
+                    <button className={styles.button} onClick={() => router.push('/admin/activar-votacion')}>
+                        Escoger Votación Activa
+                    </button>
+                    <button className={styles.button} onClick={() => router.push('/votacion/resultados')}>
+                        Ver Resultados
+                    </button>
+                </div>
+                <h4 style={{ fontSize: '2.5rem', margin: '1em auto', minWidth: '100%', textAlign:'center'}}>Control de Votación al Público</h4>
                 <div className={styles.buttonContainer}>
                     <button className={styles.button} onClick={() => handleVotacionAction('abrir')}>
                         Activar Votación
@@ -189,6 +203,11 @@ function DashBoard() {
                     <button className={styles.button} onClick={() => handleResultAction('cerrar')}>
                         Cerrar Resultados
                     </button>
+                    <ResetVotosButton
+                        eventId={ACTIVE_EVENT_ID}
+                        token={auth?.token}
+                        className={styles.button}
+                    />
                 </div>
             </section>
         </>

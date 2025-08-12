@@ -19,6 +19,7 @@ function CrearVotacion() {
     const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(true);
     const [ACTIVE_EVENT_ID, setActiveEventId] = useState(null);
+    const [fechaInicio, setFechaInicio] = useState('');
     useEffect(() => {
         const fetchActiveEventId = async () => {
             const id = await getActiveEventId();
@@ -63,14 +64,16 @@ function CrearVotacion() {
             const obj = {
                 evento: ACTIVE_EVENT_ID,
                 participantes: participantesSeleccionados,
-                duracionMinutos: Number(duracionMinutos)
+                duracionMinutos: Number(duracionMinutos),
+                // fechaInicio es obligatoria
+                fechaInicio
             };
             const res = await createVotacion(obj, auth.token);
 
             if (res.ok) {
-                setMensaje('✅ Votación creada exitosamente');
-                setParticipantesSeleccionados([]);
-                setDuracionMinutos(10);
+                // Redirigir directamente al dashboard tras crear
+                router.push('/admin/dashboard');
+                return;
             } else {
                 setMensaje(`❌ Error: ${res.error}`);
             }
@@ -110,10 +113,18 @@ function CrearVotacion() {
                 <h4 style={{ minWidth: '100%', padding: 0 }}>Duración de la votación en minutos:</h4>
                 <input
                     type="number"
-                    min="1"
+                    min="5"
                     value={duracionMinutos}
                     onChange={(e) => setDuracionMinutos(e.target.value)}
                     placeholder="Duración de la votación en minutos"
+                    required
+                />
+
+                <h4 style={{ minWidth: '100%', padding: 0 }}>Fecha y hora de inicio:</h4>
+                <input
+                    type="datetime-local"
+                    value={fechaInicio}
+                    onChange={(e) => setFechaInicio(e.target.value)}
                     required
                 />
 

@@ -58,3 +58,24 @@ export const enviarVoto = async (votacionId, participanteId) => {
         return {error: 'Error voting'};
     }
 };
+
+export const resetVotosPorEvento = async (eventId, token) => {
+    if (!eventId) throw new Error('Evento ID es requerido');
+    try {
+        const res = await fetch(`${BASE_URL}/eventos/${eventId}/reset-votos`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `${token}`
+            }
+        });
+        const data = await res.json();
+        if (!res.ok) {
+            throw new Error(data?.error || 'Error al resetear votos');
+        }
+        return data;
+    } catch (error) {
+        console.error('Error reseteando votos:', error);
+        return { error: error.message || 'Error reseteando votos' };
+    }
+};

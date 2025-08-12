@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { getVotacion } from '@/api/votacionApi';
-import { enviarVoto } from '@/api/participanteApi';
+import { getVotacion, enviarVoto as enviarVotoApi } from '@/api/votacionApi';
 import { ClipLoader } from 'react-spinners';
 import Modal from '@/components/HomePage/Modal';
 import styles from '@/styles/FormularioRegistro.module.css';
@@ -33,14 +32,11 @@ export default function VotacionPage() {
       const fechaInicio = new Date(votacion.fechaInicio);
       const fechaFin = new Date(fechaInicio.getTime() + votacion.duracionMinutos * 60 * 1000);
 
-      // Determinar si ya inició
       const yaInicio = ahora >= fechaInicio;
-
       if (yaInicio !== haIniciado) {
         setHaIniciado(yaInicio);
       }
 
-      // Calcular tiempo para iniciar (si no ha iniciado)
       if (!yaInicio) {
         const diffMsInicio = fechaInicio - ahora;
         if (diffMsInicio <= 0) {
@@ -49,41 +45,29 @@ export default function VotacionPage() {
           fetchVotacion(id);
           return;
         }
-
         const horas = Math.floor(diffMsInicio / (1000 * 60 * 60));
         const minutos = Math.floor((diffMsInicio % (1000 * 60 * 60)) / (1000 * 60));
         const segundos = Math.floor((diffMsInicio % (1000 * 60)) / 1000);
-
-        let formatoInicio;
-        if (horas > 0) {
-          formatoInicio = `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
-        } else {
-          formatoInicio = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
-        }
+        const formatoInicio = horas > 0
+          ? `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`
+          : `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
         setTiempoParaIniciar(formatoInicio);
       }
 
-      // Calcular tiempo para finalizar (si ya inició)
       if (yaInicio) {
         const diffMsFin = fechaFin - ahora;
         if (diffMsFin <= 0) {
           setTiempoParaFinalizar('00:00');
           clearInterval(interval);
-          // Redirigir al inicio cuando termine la votación
           router.push('/');
           return;
         }
-
         const horas = Math.floor(diffMsFin / (1000 * 60 * 60));
         const minutos = Math.floor((diffMsFin % (1000 * 60 * 60)) / (1000 * 60));
         const segundos = Math.floor((diffMsFin % (1000 * 60)) / 1000);
-
-        let formatoFin;
-        if (horas > 0) {
-          formatoFin = `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
-        } else {
-          formatoFin = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
-        }
+        const formatoFin = horas > 0
+          ? `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`
+          : `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
         setTiempoParaFinalizar(formatoFin);
       }
     }, 1000);
@@ -94,58 +78,44 @@ export default function VotacionPage() {
   const fetchVotacion = async (id) => {
     try {
       const res = await getVotacion(id);
-
       if (res.error) {
         setMensaje(`❌ ${res.error}`);
         return;
       }
-
       const ahora = new Date();
       const fechaInicio = new Date(res.fechaInicio);
       const fechaFin = new Date(fechaInicio.getTime() + res.duracionMinutos * 60 * 1000);
       const yaInicio = ahora >= fechaInicio;
-
       setHaIniciado(yaInicio);
       setVotacion(res);
 
-      // Tiempo para iniciar
       const diffMsInicio = fechaInicio - ahora;
       if (diffMsInicio > 0) {
         const horas = Math.floor(diffMsInicio / (1000 * 60 * 60));
         const minutos = Math.floor((diffMsInicio % (1000 * 60 * 60)) / (1000 * 60));
         const segundos = Math.floor((diffMsInicio % (1000 * 60)) / 1000);
-
-        let formatoInicio;
-        if (horas > 0) {
-          formatoInicio = `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
-        } else {
-          formatoInicio = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
-        }
+        const formatoInicio = horas > 0
+          ? `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`
+          : `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
         setTiempoParaIniciar(formatoInicio);
       } else {
         setTiempoParaIniciar('00:00');
       }
 
-      // Tiempo para finalizar
       if (yaInicio) {
         const diffMsFin = fechaFin - ahora;
         if (diffMsFin > 0) {
           const horas = Math.floor(diffMsFin / (1000 * 60 * 60));
           const minutos = Math.floor((diffMsFin % (1000 * 60 * 60)) / (1000 * 60));
           const segundos = Math.floor((diffMsFin % (1000 * 60)) / 1000);
-
-          let formatoFin;
-          if (horas > 0) {
-            formatoFin = `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
-          } else {
-            formatoFin = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
-          }
+          const formatoFin = horas > 0
+            ? `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`
+            : `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
           setTiempoParaFinalizar(formatoFin);
         } else {
           setTiempoParaFinalizar('00:00');
         }
       }
-
     } catch (error) {
       console.error('Error fetching votacion:', error);
       setMensaje('❌ Error al cargar la votación');
@@ -154,7 +124,7 @@ export default function VotacionPage() {
 
   const votar = async (participanteId) => {
     try {
-      const res = await enviarVoto(id, participanteId);
+      const res = await enviarVotoApi(id, participanteId);
       const data = await res.json();
       if (res.error) {
         setMensaje(`❌ ${data.error}`);
@@ -178,12 +148,7 @@ export default function VotacionPage() {
 
   if (!votacion) return <div className='loaderContainer'><ClipLoader color="#fff" loading={true} size={100} /></div>
 
-  if (!votacion.activa) return (
-    <p className='loaderContainer' style={{ color: 'white', textAlign: 'center', fontSize: '1.5rem', fontWeight: 'bold' }}>
-      ⛔ Esta votación ha finalizado.
-    </p>
-  );
-
+  // Primero, si aún no inicia, muestra la espera
   if (!haIniciado) {
     return (
       <div className='loaderContainer' style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', color: 'white', textAlign: 'center', fontSize: '1.5rem', fontWeight: 'bold' }}>
@@ -194,6 +159,13 @@ export default function VotacionPage() {
       </div>
     );
   }
+
+  // Si ya inició pero no está activa (porque terminó), mostrar finalizada
+  if (!votacion.activa) return (
+    <p className='loaderContainer' style={{ color: 'white', textAlign: 'center', fontSize: '1.5rem', fontWeight: 'bold' }}>
+      ⛔ Esta votación ha finalizado.
+    </p>
+  );
 
   return (
     <section className={styles.registroContainer}>

@@ -42,6 +42,7 @@ export default function Header() {
                 </button>
                 {open && (
                     <ul className="dropdown">
+                        <li><a onClick={() => handleClick('')}>Inicio</a></li>
                         <li><a onClick={() => handleClick('admin/dashboard')}>Dashboard</a></li>
                         <li><a onClick={() => handleClick(`admin/participantes`)}>Participantes</a></li>
                         <li><a onClick={() => handleClick(`votar/${ACTIVE_VOTATION_ID}`)}>Votar</a></li>

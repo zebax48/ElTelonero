@@ -97,6 +97,7 @@ function ListaParticipantes() {
                                 <th>Documento</th>
                                 <th>Teléfono</th>
                                 <th>Descripción</th>
+                                <th>Votos</th>
                                 <th>Enlace</th>
                             </tr>
                         </thead>
@@ -133,6 +134,7 @@ function ListaParticipantes() {
                                                 p?.descripcion
                                             )}
                                         </td>
+                                        <td>{p?.votos || 0}</td>
                                         <td>
                                             <a
                                                 href={
