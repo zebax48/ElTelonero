@@ -1,15 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { ClipLoader } from 'react-spinners';
 import { BASE_URL } from '@/api/serverConfig';
-import { ACTIVE_EVENT_ID } from '@/api/serverConfig';
+import { getActiveEventId } from '@/api/serverConfig';
 import Modal from '@/components/HomePage/Modal';
 import styles from '@/styles/FormularioRegistro.module.css';
 
 export default function FormularioRegistro() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
-    const eventId = ACTIVE_EVENT_ID
+    const [eventId, setEventId] = useState(null);
+
+    useEffect(() => {
+        fetchEventId();
+    }, []);
+
+    const fetchEventId = async () => {
+        try {
+            setLoading(true);
+            const id = await getActiveEventId();
+            setEventId(id);
+        } catch (error) {
+            console.error('Error fetching event ID:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const [formData, setFormData] = useState({
         correo: '',
