@@ -17,6 +17,7 @@ function CrearVotacion() {
     const [duracionMinutos, setDuracionMinutos] = useState(10);
     const [mensaje, setMensaje] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const [success, setSuccess] = useState(false);
     const [loading, setLoading] = useState(true);
     const [ACTIVE_EVENT_ID, setActiveEventId] = useState(null);
     const [fechaInicio, setFechaInicio] = useState('');
@@ -61,32 +62,39 @@ function CrearVotacion() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            // Convertir fecha local del input a ISO UTC para evitar desfases de zona horaria
+            const isoFecha = new Date(fechaInicio).toISOString();
             const obj = {
                 evento: ACTIVE_EVENT_ID,
                 participantes: participantesSeleccionados,
                 duracionMinutos: Number(duracionMinutos),
                 // fechaInicio es obligatoria
-                fechaInicio
+                fechaInicio: isoFecha
             };
             const res = await createVotacion(obj, auth.token);
 
             if (res.ok) {
-                // Redirigir directamente al dashboard tras crear
-                router.push('/admin/dashboard');
-                return;
+                setMensaje('✅ Votación creada exitosamente');
+                setSuccess(true);
+                setShowModal(true);
             } else {
                 setMensaje(`❌ Error: ${res.error}`);
+                setSuccess(false);
+                setShowModal(true);
             }
         } catch (error) {
             setMensaje('❌ Error al conectar con el servidor');
+            setSuccess(false);
+            setShowModal(true);
         }
-        setShowModal(true);
     };
 
     const handleCloseModal = () => {
         setShowModal(false);
         setMensaje(null);
-        router.push(`/`);
+        if (success) {
+            router.push('/admin/dashboard');
+        }
     };
 
     return (

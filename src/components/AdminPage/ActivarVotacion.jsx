@@ -79,7 +79,7 @@ const ActivarVotacion = ({ onVotacionActivada }) => {
 
   return (
     <div style={{ width: '100%' }}>
-      {/* Header y búsqueda con estilo de tarjeta */}
+      {/* Header y búsqueda con estilo de tarjeta 
       <div className={styles.formulario} style={{ width: '100%', maxWidth: '100%', margin: 0 }}>
         <h3 className={styles.titulo} style={{ fontSize: '1.6rem', marginBottom: '0.5rem' }}>Seleccionar votación activa</h3>
         <p style={{ opacity: 0.85, marginTop: 0, marginBottom: '1rem' }}>Busca por evento o ID, revisa la fecha de creación y activa.</p>
@@ -91,7 +91,7 @@ const ActivarVotacion = ({ onVotacionActivada }) => {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-      </div>
+      </div>*/}
 
       {/* Tabla a ancho completo */}
       <div style={{ overflowX: 'auto', width: '100%' }}>

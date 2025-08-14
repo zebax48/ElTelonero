@@ -170,9 +170,6 @@ function DashBoard() {
                     <button className={styles.button} onClick={() => router.push(`/votar/${ACTIVE_VOTATION_ID}`)}>
                         Votar
                     </button>
-                    <button className={styles.button} onClick={() => router.push('/votacion/page')}>
-                        Crear Votación
-                    </button>
                     <button className={styles.button} onClick={() => router.push(`/admin/participantes`)}>
                         Ver Participantes
                     </button>

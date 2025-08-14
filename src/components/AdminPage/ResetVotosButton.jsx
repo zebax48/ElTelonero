@@ -24,6 +24,11 @@ export default function ResetVotosButton({ eventId, token, className }) {
     }
   };
 
+  const handleCerrarAfter = () => {
+    setOpen(false);
+    setMensaje('');
+  };
+
   return (
     <>
       <button className={className} onClick={() => setOpen(true)} disabled={!eventId}>
@@ -44,14 +49,21 @@ export default function ResetVotosButton({ eventId, token, className }) {
                   Esta acción reiniciará los votos de todos los participantes asociados al evento actual. No se puede deshacer.
                 </p>
                 {mensaje && <p style={{ marginTop: '0.5rem' }}>{mensaje}</p>}
-                <div className={modalStyles.modalButtons}>
-                  <button className={modalStyles.confirmButton} onClick={onConfirm}>
-                    Confirmar
+                {!mensaje ? (
+                  <div className={modalStyles.modalButtons}>
+                    <button className={modalStyles.confirmButton} onClick={onConfirm}>
+                      Confirmar
+                    </button>
+                    <button className={modalStyles.cancelButton} onClick={() => setOpen(false)}>
+                      Cancelar
+                    </button>
+                  </div>
+                ) : (
+                  <button className={modalStyles.cancelButton} onClick={() => handleCerrarAfter()}>
+                    Cerrar
                   </button>
-                  <button className={modalStyles.cancelButton} onClick={() => setOpen(false)}>
-                    Cancelar
-                  </button>
-                </div>
+                )}
+
               </>
             )}
           </div>
