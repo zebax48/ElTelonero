@@ -3,9 +3,11 @@ import Modal from '@/components/HomePage/Modal';
 import { BASE_URL } from '@/api/serverConfig';
 import AdminHeader from '@/components/AdminPage/AdminHeader';
 import withAuth from '@/utils/withAuth';
+import { useAuth } from '@/Auth/AuthContext';
 import styles from '@/styles/CrearEvento.module.css';
 
 function CrearEvento() {
+  const { auth } = useAuth();
   const [formData, setFormData] = useState({
     nombre: '',
     fecha: '',
@@ -27,7 +29,10 @@ function CrearEvento() {
 
     const res = await fetch(`${BASE_URL}/eventos`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': auth.token,
+      },
       body: JSON.stringify(formData)
     });
 

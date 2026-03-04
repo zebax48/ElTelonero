@@ -29,7 +29,7 @@
   padding: 0 1rem;
   background-color: rgba(255, 255, 255, 0.02);
   border-radius: 1rem;
-  box-shadow: 0 0 15px rgba(60, 255, 0, 0.1);
+  box-shadow: 0 0 15px var(--color-sombra-suave);
   padding: 2rem;
   animation: slideUp 1s ease-in-out;
 }
@@ -63,7 +63,7 @@
   cursor: pointer;
   transition: transform 0.4s ease, box-shadow 0.4s ease;
   margin: 0 auto;
-  box-shadow: 0 5px 15px rgba(60, 255, 0, 0.3);
+  box-shadow: 0 5px 15px var(--color-sombra);
 }
 
 .inscribirseButton:hover {

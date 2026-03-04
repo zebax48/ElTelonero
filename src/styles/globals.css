@@ -1,26 +1,51 @@
+/* =============================================================
+   PALETA DE COLORES — El Telonero Soy Yo
+   Para cambiar el tema completo, solo modifica estos valores.
+   ============================================================= */
 :root {
-  --color-fondo: #000803;
-  --color-fondo-header: rgba(0, 0, 0, 0.7);
-  --color-fondo-dropdown: rgba(0, 0, 0, 0.95);
-  --color-texto-principal: #FFFFFF;
-  --color-acento: white;
-  --color-sombra: rgba(60, 255, 0, 0.3);
-  --color-sombra-suave: rgba(60, 255, 0, 0.1);
-  --color-sombra-fuerte: rgba(60, 255, 0, 0.5);
-  --color-texto-secundario: #E0E9E4;
-  --color-caja: #111;
-  --color-error: #FF4C4C;
-  --color-exito: #4CFF4C;
+  /* -- Colores primarios de marca (escala de morados) -- */
+  --brand-900:  #0A0015;   /* fondo oscuro profundo        */
+  --brand-800:  #130025;   /* fondo secundario             */
+  --brand-700:  #1E003A;   /* cajas / tarjetas             */
+  --brand-600:  #3B0F6E;   /* morado oscuro (botones base) */
+  --brand-500:  #6B21A8;   /* morado medio (hover)         */
+  --brand-400:  #9B3FD9;   /* morado vivo                  */
+  --brand-300:  #C265FF;   /* acento principal brillante   */
+  --brand-200:  #D8B4FE;   /* lavanda clara (texto 2°)     */
+  --brand-100:  #F3E8FF;   /* lavanda muy suave            */
 
+  /* -- Fondos -- */
+  --color-fondo:            var(--brand-900);
+  --color-fondo-secundario: var(--brand-800);
+  --color-fondo-header:     rgba(10, 0, 21, 0.85);
+  --color-fondo-dropdown:   rgba(10, 0, 21, 0.97);
+  --color-caja:             var(--brand-700);
+
+  /* -- Textos -- */
+  --color-texto-principal:  #FFFFFF;
+  --color-texto-secundario: var(--brand-200);
+  --color-acento:           var(--brand-300);
+
+  /* -- Resplandores / sombras de color -- */
+  --color-sombra:        rgba(194, 101, 255, 0.30);
+  --color-sombra-suave:  rgba(194, 101, 255, 0.12);
+  --color-sombra-fuerte: rgba(194, 101, 255, 0.55);
+
+  /* -- Estados -- */
+  --color-error: #FF4C4C;
+  --color-exito: #A78BFA;
+
+  /* -- Podio (mantienen color oro/plata/bronce) -- */
   --color-ganador: #f5c518;
   --color-segundo: #b6b6b6;
   --color-tercero: #cd7f32;
 
-  --color-modal-bg: rgba(0, 0, 0, 0.8);
-  --color-modal-box: #111;
-  --color-modal-border: #3cff00;
-  --color-modal-text: #fff;
-  --color-modal-shadow: rgba(60, 255, 0, 0.4);
+  /* -- Modal -- */
+  --color-modal-bg:     rgba(10, 0, 21, 0.88);
+  --color-modal-box:    var(--brand-700);
+  --color-modal-border: var(--brand-300);
+  --color-modal-text:   #fff;
+  --color-modal-shadow: rgba(194, 101, 255, 0.45);
 }
 
 
@@ -247,7 +272,7 @@ a:active {
 .acerca p {
   font-size: 1.2rem;
   line-height: 1.6;
-  color: #749E86;
+  color: var(--color-texto-secundario);
   font-family: "Lato", arial, sans-serif;
 }
 

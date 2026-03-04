@@ -59,7 +59,7 @@
 }
 
 .loginButton {
-    background-color: #004d40;
+    background-color: var(--brand-600, #3B0F6E);
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -71,13 +71,13 @@
 }
 
 .loginButton:hover {
-    background-color: #00796b;
+    background-color: var(--brand-500, #6B21A8);
 }
 
 .recoverLink {
     display: block;
     margin-top: 20px;
-    color: #004d40;
+    color: var(--brand-300, #C265FF);
     text-decoration: none;
 }
 

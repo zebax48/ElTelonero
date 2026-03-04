@@ -159,16 +159,16 @@ function DashBoard() {
                         priority
                     />
                 </div>
-                <h4 style={{ fontSize: '2.5rem', margin: '1em auto', minWidth: '100%', textAlign:'center'}}>Dashboard</h4>
+                <h4 style={{ fontSize: '2.5rem', margin: '1em auto', minWidth: '100%', textAlign:'center'}}>Evento</h4>
                 <div className={styles.buttonContainer}>
                     <button className={styles.button} onClick={() => router.push('/formulario/evento')}>
                         Crear Evento
                     </button>
+                    <button className={styles.button} onClick={() => router.push('/admin/seleccionar-evento')}>
+                        Escoger Evento Activo
+                    </button>
                     <button className={styles.button} onClick={() => router.push(`/formulario/registro`)}>
                         Crear Participante
-                    </button>
-                    <button className={styles.button} onClick={() => router.push(`/votar/${ACTIVE_VOTATION_ID}`)}>
-                        Votar
                     </button>
                     <button className={styles.button} onClick={() => router.push(`/admin/participantes`)}>
                         Ver Participantes
@@ -181,6 +181,9 @@ function DashBoard() {
                     </button>
                     <button className={styles.button} onClick={() => router.push('/admin/activar-votacion')}>
                         Escoger Votación Activa
+                    </button>
+                    <button className={styles.button} onClick={() => router.push(`/votar/${ACTIVE_VOTATION_ID}`)}>
+                        Votar
                     </button>
                     <button className={styles.button} onClick={() => router.push('/votacion/resultados')}>
                         Ver Resultados

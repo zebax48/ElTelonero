@@ -32,11 +32,14 @@ export const getEvento = async (id) => {
     }
 };
 
-export const createEvento = async (data) => {
+export const createEvento = async (data, token) => {
     try {
         const res = await fetch(`${BASE_URL}/eventos`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token,
+            },
             body: JSON.stringify(data)
         });
         if (!res.ok) {

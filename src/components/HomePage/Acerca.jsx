@@ -35,7 +35,7 @@ export default function Acerca() {
                                 </p>
                                 <h4 className="subtitulo">Primer Lugar</h4>
                                 <p>
-                                    - Se convierte en el telonero oficial del concierto Los Enanitos Verdes
+                                    - Se convierte en el telonero oficial del festival Reyes de la Balada 2
                                     <br />
                                     - Presentación con 3 canciones en tarima
                                     <br />
