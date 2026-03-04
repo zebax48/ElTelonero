@@ -12,7 +12,7 @@
     "@tsparticles/engine": "^3.8.1",
     "@tsparticles/react": "^3.0.0",
     "framer-motion": "^12.23.6",
-    "next": "15.3.5",
+    "next": "15.3.8",
     "react": "^19.0.0",
     "react-confetti-explosion": "^3.0.3",
     "react-dom": "^19.0.0",
